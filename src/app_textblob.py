@@ -1,7 +1,7 @@
 
 from textblob import TextBlob
 from typing import Tuple
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -120,16 +120,21 @@ def metrics():
     summary="Predict sentiment",
     tags=["inference"],
 )
-def predict(req: PredictRequest):
-    if not req.text and not req.texts:
-        raise HTTPException(status_code=400, detail="Provide either 'text' or 'texts'.")
+def predict(
+    text: Optional[str] = Query(None, description="Single text"),
+    texts: Optional[List[str]] = Query(None, description="Batch of texts"),
+):
+    if text is None and texts is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Provide either 'text' or 'texts'."
+        )
 
-    inputs = [req.text] if req.text is not None else list(map(str, req.texts or []))
-    if not inputs:
-        raise HTTPException(status_code=400, detail="'texts' must contain at least one item.")
+    inputs = [text] if text is not None else texts
 
     results = []
-    for t in tqdm(inputs,desc="Predicting sentiment"):
+    for t in tqdm(inputs, desc="Predicting sentiment"):
         label, pol = service.predict_one(t)
         results.append(Prediction(label=label, polarity=pol))
+
     return PredictResponse(results=results)
