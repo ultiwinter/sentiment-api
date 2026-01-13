@@ -1,0 +1,10 @@
+fastapi==0.112.0
+uvicorn[standard]==0.30.5
+textblob==0.18.0.post0
+pydantic==2.7.4
+pandas==2.2.2
+scikit-learn==1.7.1
+psutil==7.0.0
+pytest==8.3.2
+# transformers==4.55.3
+# torch==2.8.0
