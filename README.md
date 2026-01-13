@@ -56,7 +56,7 @@ python src\sentiment.py
 We can run the inference through FAST API on a local port by carrying out these steps:
 
 ```bash
-uvicorn src.app_textblob:app --host localhost --port 8000 --reload
+uvicorn src.app_textblob:app --host localhost --port 8000
 ```
 We can either then go to (http://127.0.0.1:8000/docs) insert the desired feedback for sentiment analysis,
 or run these commands on an additional terminal:
